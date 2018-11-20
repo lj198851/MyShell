@@ -1,0 +1,26 @@
+systemctl stop firewalld
+systemctl disable firewalld
+setenforce 0
+sed -ri '/^SELINUX/c\SELINUX=disabled' /etc/selinux/config
+yum -y install epel-release
+sleep 6
+yum -y install cobbler cobbler-web tftp-server dhcp httpd xinetd rsync pykickstart fence-agents debmirror
+sleep 120
+sed -ri '/allow_dynamic_settings/c\allow_dynamic_settings: 1' /etc/cobbler/settings
+sed -ri '/disable/c\disable=no' /etc/xinetd.d/tftp
+systemctl start httpd cobblerd rsyncd xinetd tftp
+systemctl enable httpd cobblerd rsyncd xinetd tftp
+#cobbler check
+cobbler setting edit --name=server --value=192.168.136.129
+cobbler setting edit --name=next_server --value=192.168.136.129
+cobbler get-loaders
+cobbler setting edit --name=default_password_crypted --value='$1$jiayuan5$tSHTrVRX8zCLKGJgqWFgO.'
+cobbler setting edit --name=manage_dhcp --value=1
+#设置DHCP所在的IP地址段
+sed -i s/192.168.1/192.168.136/g /etc/cobbler/dhcp.template
+sed -i '/@sections/s/^/#/' /etc/debmirror.conf
+sed -i '/arches=/s/^/#/' /etc/debmirror.conf
+sed -i '/@dists=/s/^/#/' /etc/debmirror.conf
+systemctl restart cobblerd
+cobbler sync
+cobbler check
