@@ -1,0 +1,69 @@
+install
+text
+keyboard us
+lang en_US
+timezone Asia/ShangHai
+rootpw --iscrypted $default_password_crypted
+auth --useshadow --enablemd5
+firewall --disabled
+selinux --disabled
+url --url=$tree
+
+# System bootloader configuration
+bootloader --append=" crashkernel=auto" --location=mbr --boot-drive=sda
+# Partition clearing information
+clearpart --none --initlabel
+# Disk partitioning information
+part swap --fstype="swap" --ondisk=sda --size=9536
+part btrfs.252 --fstype="btrfs" --ondisk=sda --size=29325
+btrfs none --label=centos --data=single btrfs.252
+btrfs /var --subvol --name=var LABEL=centos
+btrfs / --subvol --name=root LABEL=centos
+btrfs /home --subvol --name=home LABEL=centos
+
+$yum_repo_stanza
+$SNIPPET('network_config')
+skipx
+firstboot --disable
+reboot
+
+%pre
+$SNIPPET('log_ks_pre')
+$SNIPPET('kickstart_start')
+$SNIPPET('pre_install_network_config')
+#Enable installation monitoring
+$SNIPPET('pre_anamon')
+%end
+
+%packages
+$SNIPPET('func_install_if_enabled')
+@^minimal
+@core
+httpd
+wget
+lftp
+lrzsz
+vim-enhanced
+bash-completion
+%end
+
+%post --nochroot
+$SNIPPET('log_ks_post_nochroot')
+%end
+
+%post
+$SNIPPET('log_ks_post')
+$yum_config_stanza
+$SNIPPET('post_install_kernel_options')
+$SNIPPET('post_install_network_config')
+$SNIPPET('func_register_if_enabled')
+$SNIPPET('download_config_files')
+$SNIPPET('koan_environment')
+$SNIPPET('redhat_register')
+$SNIPPET('cobbler_register')
+$SNIPPET('post_anamon')
+$SNIPPET('kickstart_done')
+sed -ri "/^#UseDNS/c\UseDNS no" /etc/ssh/sshd_config
+sed -ri "/^GSSAPIAuthentication/c\GSSAPIAuthentication no"
+systemctl enable httpd
+%end
