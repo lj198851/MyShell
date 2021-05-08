@@ -36,7 +36,7 @@ Vagrant.configure("2") do |config|
 
 # HDSS7-21.host.com
 
-  config.vm.define "wHDSS7-21" do |config|
+  config.vm.define "HDSS7-21" do |config|
     config.vm.box = "/Users/jaywang/Documents/box/CentOS-7-x86_64-Vagrant-1804_02.VirtualBox.box"
     config.vm.hostname = 'HDSS7-21.host.com'
     config.vm.network :private_network, ip: "10.4.7.21"
