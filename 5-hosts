@@ -1,0 +1,83 @@
+一次开启五个主机
+---
+参考资料：https://www.techoism.com/multiple-vagrant-vms-one-vagrantfile/
+
+### Vagranfile
+```
+Vagrant.configure("2") do |config|
+
+# HDSS7-11.host.com
+
+  config.vm.define "HDSS7-11" do |config|
+    config.vm.box = "/Users/jaywang/Documents/box/CentOS-7-x86_64-Vagrant-1804_02.VirtualBox.box"
+    config.vm.hostname = 'HDSS7-11.host.com'
+    config.vm.network :private_network, ip: "10.4.7.11"
+    config.vm.provider :virtualbox do |v|
+      v.memory = 2048
+      v.cpus = 2
+      v.name = "HDSS7-11"
+    end
+  end
+
+
+# HDSS7-12.host.com
+
+  config.vm.define "HDSS7-12" do |config|
+    config.vm.box = "/Users/jaywang/Documents/box/CentOS-7-x86_64-Vagrant-1804_02.VirtualBox.box"
+    config.vm.hostname = 'HDSS7-12.host.com'
+    config.vm.network :private_network, ip: "10.4.7.12"
+    config.vm.provider :virtualbox do |v|
+      v.memory = 2048
+      v.cpus = 2
+      v.name = "HDSS7-12"
+    end
+  end
+
+
+# HDSS7-21.host.com
+
+  config.vm.define "wHDSS7-21" do |config|
+    config.vm.box = "/Users/jaywang/Documents/box/CentOS-7-x86_64-Vagrant-1804_02.VirtualBox.box"
+    config.vm.hostname = 'HDSS7-21.host.com'
+    config.vm.network :private_network, ip: "10.4.7.21"
+    config.vm.provider :virtualbox do |v|
+      v.memory = 2048
+      v.cpus = 2
+      v.name = "HDSS7-21"
+    end
+  end
+
+# HDSS7-22.host.com
+
+  config.vm.define "HDSS7-22" do |config|
+    config.vm.box = "/Users/jaywang/Documents/box/CentOS-7-x86_64-Vagrant-1804_02.VirtualBox.box"
+    config.vm.hostname = 'HDSS7-22.host.com'
+    config.vm.network :private_network, ip: "10.4.7.22"
+    config.vm.provider :virtualbox do |v|
+      v.memory = 2048
+      v.cpus = 2
+      v.name = "HDSS7-22"
+    end
+  end
+
+
+# HDSS7-200.host.com
+
+  config.vm.define "HDSS7-200" do |config|
+    config.vm.box = "/Users/jaywang/Documents/box/CentOS-7-x86_64-Vagrant-1804_02.VirtualBox.box"
+    config.vm.hostname = 'HDSS7-200.host.com'
+    config.vm.network :private_network, ip: "10.4.7.200"
+    config.vm.provider :virtualbox do |v|
+      v.memory = 2048
+      v.cpus = 2
+      v.name = "HDSS7-200"
+    end
+  end
+
+
+
+end
+
+
+
+```
